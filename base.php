@@ -15,12 +15,23 @@ class Base extends \Plugin {
 	 */
 	public function _load() {
 		$f3 = \Base::instance();
-		$f3->route("GET /todo", function($f3) {
 
-		});
-		$f3->route("POST /todo", function($f3) {
+		// Add menu item
+		$this->_addNav("todo", "To-do", '/$\\/todo/i');
 
-		});
+		// Add routes
+		$f3->route("GET /todo", "Plugin\Todo\Controller->get");
+		$f3->route("POST /todo/@action", "Plugin\Todo\Controller->post");
+	}
+
+	/**
+	 * Install plugin (add database tables)
+	 */
+	public function _install() {
+		$f3 = \Base::instance();
+		$db = $f3->get("db.instance");
+		$install_db = file_get_contents(__DIR__ . "/db/database.sql");
+		$db->exec(explode(";", $install_db));
 	}
 
 	/**
@@ -28,7 +39,10 @@ class Base extends \Plugin {
 	 * @return bool
 	 */
 	public function _installed() {
-		return true;
+		$f3 = \Base::instance();
+		$db = $f3->get("db.instance");
+		$q = $db->exec("SHOW TABLES LIKE 'todo_item'");
+		return !!$db->count();
 	}
 
 }

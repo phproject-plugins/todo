@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<include href="blocks/head.html" />
+	<style type="text/css">
+	.list-group-todo .list-group-item {
+		min-height: 53px;
+		cursor: move;
+	}
+	.list-group-todo .left {
+		float: left;
+		margin-right: 15px;
+	}
+	.list-group-todo .left input {
+		margin-top: 10px;
+	}
+	.list-group-todo .right {
+		overflow: hidden;
+	}
+	.list-group-todo .form-control:not(:focus) {
+		border-color: transparent;
+		background-color: transparent;
+		color: inherit;
+	}
+	.list-group-todo .form-control:not(:focus):hover {
+		border-color: #777;
+		background-color: rgba(127, 127, 127, 0.2);
+	}
+	.list-group-todo .list-group-item.completed .form-control {
+		text-decoration: line-through;
+		opacity: 0.9;
+	}
+	</style>
+</head>
+<body>
+<div class="container">
+	<include href="blocks/navbar.html" />
+
+	<h1>To-do List</h1>
+	<br>
+
+	<ul class="list-group list-group-todo">
+		<repeat group="{{ @items }}" value="{{ @item }}">
+			<li class="list-group-item {{ @item.completed ? 'completed' : '' }}">
+				<div class="left">
+					<input type="checkbox" value="{{ @item.id }}" {{ @item.completed ? 'checked' : '' }}>
+				</div>
+				<div class="right">
+					<input class="form-control input-sm" value="{{ @item.text }}">
+				</div>
+			</li>
+		</repeat>
+	</ul>
+
+	<include href="blocks/footer.html" />
+	<script src="{{ @site.url }}minify/js/jquery-ui-dragsort.min.js,jquery.ui.touch-punch.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$(".list-group-todo").sortable();
+		$(".list-group-todo .list-group-item .left input").change(function(e) {
+			if($(this).prop('checked')) {
+				$(this).parents('.list-group-item').addClass('completed');
+			} else {
+				$(this).parents('.list-group-item').removeClass('completed');
+			}
+		});
+	});
+	</script>
+</div>
+</body>
+</html>
